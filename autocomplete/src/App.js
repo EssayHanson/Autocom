@@ -1,18 +1,39 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import Autocomplete from  'react-autocomplete';
+import { getShows, matchShows } from './data';
+import ShowDisplay from './components/ShowDisplay';
 import './App.css';
 
 class App extends Component {
+
+  state = { value: '' };
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+      <div style = {{ marginTop: 40, marginLeft: 50 }}>
+      <ShowDisplay task="Shows to watch"/>
+        <Autocomplete
+          value={ this.state.value }
+          inputProps={{ id: 'states-autocomplete' }}
+          wrapperStyle={{ position: 'relative', display: 'inline-block' }}
+          items={ getShows() }
+          getItemValue={ item => item.name }
+          shouldItemRender={ matchShows }
+          onChange={(event, value) => this.setState({ value }) }
+          onSelect={ value => this.setState({ value }) }
+          renderMenu={ children => (
+            <div className = "menu">
+              { children }
+            </div>
+          )}
+          renderItem={ (item, isHighlighted) => (
+            <div
+              className={`item ${isHighlighted ? 'item-highlighted' : ''}`}
+              key={ item.abbr } >
+              { item.name }
+            </div>
+          )}
+        />
       </div>
     );
   }
